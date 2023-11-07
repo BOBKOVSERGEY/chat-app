@@ -4,6 +4,8 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -45,4 +47,27 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function chatRooms(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            related: ChatRoom::class
+        );
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(
+            related: Message::class
+        );
+    }
+
+    public function isInRoom($chatRoomId): bool
+    {
+        return $this->chatRooms()
+            ->where('chatroom_id', $chatRoomId)
+            ->exists();
+    }
+
+
 }
