@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class ChatRoom extends Model
+class Chatroom extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['name'];
 
     public function users(): BelongsToMany
     {

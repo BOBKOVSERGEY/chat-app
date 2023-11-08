@@ -6,7 +6,7 @@ use App\Http\Requests\AddUsersToChatRoomRequest;
 use App\Http\Requests\ChatRoomStoreRequest;
 use App\Http\Requests\ChatRoomUpdateRequest;
 use App\Http\Resources\ChatRoomResource;
-use App\Models\ChatRoom;
+use App\Models\Chatroom;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,7 @@ class ChatRoomController extends Controller
             ->get();
 
         return response()->json([
-            'chatRooms' => ChatRoomResource::collection($chatRooms)
+            'chatrooms' => ChatRoomResource::collection($chatRooms)
         ], 201);
     }
 
@@ -34,55 +34,55 @@ class ChatRoomController extends Controller
             ]);
 
         return response()->json([
-            'chatroom' => $chatroom
+            'chatroom' => new ChatRoomResource($chatroom->load(['users']))
         ], 201);
 
     }
 
     public function addUsersToChatRoom(
         AddUsersToChatRoomRequest $request,
-        ChatRoom                  $chatRoom
+        Chatroom $chatroom
     ): JsonResponse
     {
         $data = $request->validated();
 
-        $chatRoom->users()->syncWithoutDetaching($data['user_ids']);
+        $chatroom->users()->syncWithoutDetaching($data['user_ids']);
 
         return response()->json([
-            'chatroom' => $chatRoom->load('users')
+            'chatroom' => $chatroom->load('users')
         ], 201);
     }
 
-    public function delete(ChatRoom $chatRoom): JsonResponse
+    public function delete(Chatroom $chatroom): JsonResponse
     {
-        $chatRoom->delete();
+        $chatroom->delete();
 
         return response()->json([
             'message' => 'Chatroom deleted successfully'
         ]);
     }
 
-    public function show(Request $request, ChatRoom $chatRoom): JsonResponse
+    public function show(Request $request, Chatroom $chatroom): JsonResponse
     {
-        $chatRoom = $chatRoom->load(['messages', 'users']);
+        $chatRoom = $chatroom->load(['messages', 'users']);
 
         return response()->json([
             'chatroom' => new ChatRoomResource($chatRoom)
         ]);
     }
 
-    public function update(ChatRoomUpdateRequest $request, ChatRoom $chatRoom)
+    public function update(ChatRoomUpdateRequest $request, Chatroom $chatroom): JsonResponse
     {
         $data = $request->validated();
         $data['user_ids'][] = auth()->user()->id;
 
-        $chatRoom->users()->sync($data['user_ids']);
+        $chatroom->users()->sync($data['user_ids']);
 
-        $chatRoom->update([
+        $chatroom->update([
             'name' => $data['room_name']
         ]);
 
-        $chatRoom = $chatRoom->load(['users']);
+        $chatRoom = $chatroom->load(['users']);
 
         return response()->json([
             'chatroom' => new ChatRoomResource($chatRoom)

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\ChatRoom;
+use App\Models\Chatroom;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('chatroom_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(ChatRoom::class)
+            $table->foreignIdFor(Chatroom::class)
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
@@ -23,7 +23,6 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->timestamps();
         });
     }
 

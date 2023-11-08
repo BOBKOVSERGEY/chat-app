@@ -12,7 +12,7 @@ class ChatRoomUpdateRequest extends FormRequest
             'room_name' => [
                 'required',
                 'max:255',
-                'unique:chatrooms,name,'.$this->chatRoom->id,
+                'unique:chatrooms,name,'.$this->chatroom->id,
             ],
             'user_ids' => [
                 'required',
