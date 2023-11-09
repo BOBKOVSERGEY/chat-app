@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChatRoomController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 
@@ -27,6 +29,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // search users
     Route::get('search/users', [UserController::class, 'searchUsers']);
+
+    // for broadcasting
+    Broadcast::routes(['middleware' => ['auth:sanctum']]);
+
+    // typing events
+    Route::post(
+        'chatrooms/{chatroom}/user-is-typing',
+        [MessageController::class, 'userIsTyping']
+    );
+    Route::post(
+        'chatrooms/{chatroom}/user-stopped-typing',
+        [MessageController::class, 'userStoppedTyping']
+    );
+
+
+    // messages
+    Route::post('chatrooms/{chatroom}/messages', [MessageController::class, 'store']);
 });
 
 
