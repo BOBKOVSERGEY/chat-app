@@ -20,7 +20,7 @@ class MessageController extends Controller
 
         if($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
-            $request->image->storeAs('public/chatroom_images', $imageName);
+            $request->image->storeAs('chatroom_images', $imageName);
 
             $storageUrl = Storage::url('chatroom_images/' . $imageName);
 

@@ -21,7 +21,7 @@ class MessageSentEvent implements ShouldBroadcast
 
 
     public function __construct(
-        private readonly MessageResource $message
+        public MessageResource $message
     )
     {}
 

@@ -16,10 +16,8 @@ class UserIsTypingEvent implements ShouldBroadcast
     use InteractsWithSockets;
     use SerializesModels;
 
-
     public function __construct(
-        private readonly string $username,
-        private readonly int $roomId,
+        public string $username, public int $roomId
     )
     {}
 
